@@ -1,26 +1,39 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AppMax QA — Validacao Onda 1 (30 leads)</title>
+<title>AppMax QA — Onda 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Ubuntu:wght@400;500;700&display=swap');
 :root{
-  --sidebar-bg:#1a1625;
-  --sidebar-accent:#231a30;
+  /* AppMax brand (do deck oficial AppMax) */
+  --brand-primary:#6C2BD9;        /* Roxo principal */
+  --brand-primary-mid:#5B21B6;
+  --brand-primary-light:#8B5CF6;
+  --brand-dark:#1A1040;            /* Roxo profundo */
+  --brand-dark-mid:#1E1B4B;
+  --brand-soft:#F3EEFF;            /* Lavanda suave bg */
+  --brand-mint-deep:#DDD6FE;
+  --brand-accent:#00D4AA;          /* Verde-água accent */
+  --brand-accent-light:#34D9B8;
+  --brand-accent-dark:#00B894;
+
+  --sidebar-bg:#1A1040;
+  --sidebar-accent:#2A1F5C;
   --card-bg:#ffffff;
-  --body-bg:#f5f3f0;
+  --body-bg:#F5F3FF;
 
-  /* AppMax brand */
-  --accent:#FF5A1F;
-  --accent-dark:#e04617;
-  --accent-light:#ffe3d6;
+  /* Aliases pra manter compat com regras existentes */
+  --accent:var(--brand-primary);
+  --accent-dark:var(--brand-primary-mid);
+  --accent-light:var(--brand-soft);
 
-  /* Status colors */
+  /* Status colors (mantém semantica de UI) */
   --green:#10b981;
   --green-light:#d1fae5;
   --red:#ef4444;
@@ -29,37 +42,44 @@
   --amber-light:#fef3c7;
   --blue:#0ea5e9;
   --blue-light:#e0f2fe;
-  --violet:#8b5cf6;
-  --violet-light:#ede9fe;
-  --emerald:#10b981;
-  --emerald-light:#d1fae5;
+  --violet:var(--brand-primary);
+  --violet-light:var(--brand-soft);
+  --emerald:var(--brand-accent);
+  --emerald-light:#ccf7eb;
   --rose:#f43f5e;
   --rose-light:#ffe4e6;
 
   /* Neutrals */
-  --text-primary:#1e293b;
-  --text-secondary:#64748b;
+  --text-primary:#1A1040;
+  --text-secondary:#475569;
   --text-muted:#94a3b8;
   --border:#e2e8f0;
-  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
-  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+  --shadow:0 1px 3px rgba(26,16,64,.08),0 1px 2px rgba(26,16,64,.05);
+  --shadow-lg:0 10px 15px -3px rgba(26,16,64,.10),0 4px 6px -2px rgba(26,16,64,.05);
   --radius:12px;
   --radius-sm:8px;
   --transition:all .2s ease;
+
+  --font-headline:'Ubuntu','Inter',sans-serif;
+  --font-body:'Inter',sans-serif;
 }
 html{font-size:15px}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--body-bg);color:var(--text-primary);display:flex;min-height:100vh;overflow:hidden}
+body{font-family:var(--font-body),-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--body-bg);color:var(--text-primary);display:flex;min-height:100vh;overflow:hidden}
+h1,h2,h3,h4,.brand-title{font-family:var(--font-headline)}
 
 /* ============================================================
    SIDEBAR
 ============================================================ */
 .sidebar{width:300px;min-width:300px;background:var(--sidebar-bg);color:#e2e8f0;display:flex;flex-direction:column;padding:0;height:100vh;overflow-y:auto;z-index:10}
 .sidebar-header{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+
+.brand-row{display:flex;align-items:center;gap:10px}
+.brand-logo{width:32px;height:32px;border-radius:8px;background:#fff;padding:3px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .sidebar-header h1{font-size:1.2rem;font-weight:800;letter-spacing:-.02em}
 .sidebar-header h1 .brand{color:var(--accent)}
 .sidebar-header p{font-size:.75rem;color:var(--text-muted);margin-top:4px}
-.sidebar-header .reviewer-chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,90,31,.15);color:var(--accent);border:1px solid rgba(255,90,31,.3);padding:4px 10px;border-radius:12px;font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition)}
-.sidebar-header .reviewer-chip:hover{background:rgba(255,90,31,.25)}
+.sidebar-header .reviewer-chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(108,43,217,.15);color:var(--accent);border:1px solid rgba(108,43,217,.3);padding:4px 10px;border-radius:12px;font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.sidebar-header .reviewer-chip:hover{background:rgba(108,43,217,.25)}
 
 /* Reviewer tabs (Eduardo / Lucas) */
 .reviewer-tabs{display:flex;gap:4px;margin-top:12px;background:rgba(255,255,255,.04);padding:3px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
@@ -73,7 +93,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Hel
 .filter-section h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px;font-weight:600}
 .filter-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;border:none;background:transparent;color:#cbd5e1;font-size:.82rem;cursor:pointer;border-radius:var(--radius-sm);transition:var(--transition);text-align:left;font-family:inherit}
 .filter-btn:hover{background:rgba(255,255,255,.06)}
-.filter-btn.active{background:rgba(255,90,31,.18);color:#fff;font-weight:600}
+.filter-btn.active{background:rgba(108,43,217,.18);color:#fff;font-weight:600}
 .filter-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .filter-dot.all{background:#fff}
 .filter-dot.new{background:var(--text-muted)}
@@ -246,7 +266,7 @@ a.chip:hover{background:var(--accent-light);color:var(--accent-dark)}
 .notes-section{padding:12px 28px 16px}
 .notes-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;font-weight:600}
 .notes-textarea{width:100%;min-height:80px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.84rem;resize:vertical;transition:border-color .2s;color:var(--text-primary);background:#fff}
-.notes-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,90,31,.15)}
+.notes-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,43,217,.15)}
 .notes-textarea::placeholder{color:var(--text-muted)}
 
 /* Action buttons */
@@ -314,8 +334,11 @@ a.chip:hover{background:var(--accent-light);color:var(--accent-dark)}
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <h1><span class="brand">AppMax</span> QA</h1>
-    <p>Validacao Onda 1 &middot; 30 leads</p>
+    <div class="brand-row">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAo9JREFUWEftlstrE1EUxr8zeTQK1k2QqiuxC1squlCoWCpxJ7b1RfcNSgtJEP+AQgjuXCguRMTUVFzZoEGruBAfkIIuuqhYY8QH3dgaG4Q2pabJzD0ypYE0zcydSVJ04V3M5p77fb/73TN3hmAyxsLszs2rwwK4APBOs1obc4II7wU4MnijKUFmC6PBQowZAzbE7ZQyE58zBLg1mN+rOJXPAEwh7ThW1hLhnaH4SCjfJ4TyqB4DC2uFIUA0tHKaBSUsiNRV8h/AMIFYgFs0rByuJV92OF2KEMcEYwhAk5nGpnW4bhoNFY+y4BdmEJsKoEOMBAvXBeOiUQqbDnA7oJ4FxIO/BnAnmO/RWBmXAqQmuJOEtq9UOPP1F56PfzDsH6eD31yJH/8ka1IpwOwkb13I8xgYJ8vFZr5kTQDo8TaHtz8S7yjUDZCe4GvMfKlSyBjAurmuKU0gneR5BnutAdgztwTwMSm4WowbE7Bv3kAAuXm4f9r9Gz/3VDam9AjkCVgzz2nZOMCJqw99o+WJ1gmQkna7vvM18z4A/oYB/Jhd+P762VRrZNSXN3rVKsz1ssYBMONJe7fSa8O8wQBARqjU2uGjpUqIKjsvldhMgObIqAl1RSK8bPZQ765DtFxyMDG3nYACumwKUIJQi3RKTyI88MqTW6T7AOsNV21YTYCJcLfZ6xqSAuguDGTAYjIzlzuYXy7uNrn//Sf8O9a9hrHAUoumuDpLawRYODSePn9zy7fVDZodgexDs2Gehb+t27kOQKbxTwBoABQZqaX5WhJIJ8UUAwcsGUiKmNQj7V3ut3a0KJVUzxAU/Z+tvv9DwtO2LqXHjvlqE+qPNYgwgP01HEcWRPe2ezBcfl9YBfkDA4OuwG174GQAAAAASUVORK5CYII=" alt="AppMax" class="brand-logo" />
+      <h1><span class="brand">AppMax</span> QA</h1>
+    </div>
+    <p>Onda 2 V3 &middot; 31 leads auditados</p>
     <div class="reviewer-tabs" role="tablist" aria-label="Revisor">
       <button class="reviewer-tab" id="tabEduardo" role="tab" onclick="setReviewer('Eduardo')" title="Revisar como Eduardo">
         <span>&#128100;</span>
@@ -625,10 +648,10 @@ async function loadLeadsFromSupabase() {
   try {
     setSyncStatus('syncing');
     const leads = await supaFetch(
-      `${TABLE_ITEMS}?select=*&pqs=in.(pqs1,pqs2,pqs3)&order=pqs.asc,tpv_projetado.desc`
+      `${TABLE_ITEMS}?select=*&batch_id=eq.wave2-2026-05-05-v3-final&pqs=in.(pqs1,pqs2,pqs3)&order=pqs.asc,tpv_projetado.desc`
     );
     LEADS_RAW = leads || [];
-    localStorage.setItem('appmax_qa_leads_cache', JSON.stringify(LEADS_RAW));
+    localStorage.setItem('appmax_qa_leads_cache_v2', JSON.stringify(LEADS_RAW));
     setSyncStatus('synced');
   } catch(e) {
     if (e.message === 'USE_DUMMY_DATA') {
@@ -639,7 +662,7 @@ async function loadLeadsFromSupabase() {
     }
     console.warn('Fetch falhou, usando cache localStorage:', e);
     setSyncStatus('offline');
-    const cache = localStorage.getItem('appmax_qa_leads_cache');
+    const cache = localStorage.getItem('appmax_qa_leads_cache_v2');
     if (cache) {
       try { LEADS_RAW = JSON.parse(cache); } catch(_) { LEADS_RAW = []; }
     }
@@ -659,13 +682,13 @@ async function loadReviewsFromSupabase() {
         reviewed_at: r.reviewed_at || ''
       };
     });
-    localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+    localStorage.setItem('appmax_qa_reviews_cache_v2', JSON.stringify(reviewsAllBDRs));
   } catch(e) {
     if (e.message === 'USE_DUMMY_DATA') {
       return;
     }
     console.warn('Falha ao carregar reviews Supabase, tentando cache:', e);
-    const cache = localStorage.getItem('appmax_qa_reviews_cache');
+    const cache = localStorage.getItem('appmax_qa_reviews_cache_v2');
     if (cache) {
       try { reviewsAllBDRs = JSON.parse(cache); } catch(_) { reviewsAllBDRs = {}; }
     }
@@ -677,7 +700,7 @@ async function saveReviewToSupabase(key, review) {
   // Always update local cache first
   if (!reviewsAllBDRs[key]) reviewsAllBDRs[key] = {};
   reviewsAllBDRs[key][currentReviewer] = review;
-  localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+  localStorage.setItem('appmax_qa_reviews_cache_v2', JSON.stringify(reviewsAllBDRs));
 
   if (USE_DUMMY_DATA) return;
 
@@ -878,14 +901,25 @@ function renderLeadCard(d, review, realIdx) {
   if (d.categoria) chips.push(`<span class="chip"><span class="chip-icon">&#127991;</span>${escapeHtml(d.categoria)}</span>`);
   if (d.nicho) chips.push(`<span class="chip"><span class="chip-icon">&#127919;</span>${escapeHtml(d.nicho)}</span>`);
 
-  // --- Stats grid (6 cards) ---
+  // --- Stats grid (cards V3) ---
+  // Helper: extract from tech_stack JSONB
+  const ts = d.tech_stack || {};
+  const sw = ts.similarweb || {};
+  const ig = ts.instagram || {};
+  const swVisits = sw.monthly_visits;
+  const swBand = sw.monthly_visits_band || 'unknown';
+  const swDisplay = swVisits ? (swVisits >= 1000 ? Math.round(swVisits/1000) + 'k visitas/mes' : swVisits + ' visitas/mes') : (swBand !== 'unknown' ? swBand : 'N/D');
+  const igFollowers = ig.followers;
+  const igHandle = ig.handle;
+  const igDisplay = igFollowers ? (igFollowers >= 1000 ? Math.round(igFollowers/1000) + 'k seguidores' : igFollowers + ' seguidores') : 'N/D';
+
   const statsCards = [
-    { val: fmtBRL(d.tpv_projetado, true), label: 'TPV / mes' },
+    { val: fmtBRL(d.tpv_projetado, true), label: 'TPV / mes (CERC)' },
     { val: fmtBRL(d.ticket_medio_produtos), label: 'Ticket Medio' },
     { val: escapeHtml(d.gateway_atual || 'N/D'), label: 'Gateway Atual', highlight: !!d.gateway_atual },
     { val: escapeHtml(d.plataforma || 'N/D'), label: 'Plataforma' },
-    { val: escapeHtml(d.categoria || 'N/D'), label: 'Vertical' },
-    { val: fmtBRL(d.tpv_projetado, true), label: 'Faturamento Estimado' }
+    { val: escapeHtml(swDisplay), label: 'SimilarWeb extension visits', highlight: !!swVisits },
+    { val: escapeHtml(igDisplay) + (igHandle ? ` <span style="font-size:0.7em;opacity:0.7">@${escapeHtml(igHandle)}</span>` : ''), label: 'Instagram followers', highlight: !!igFollowers }
   ];
 
   const statsHtml = statsCards.map(s =>
@@ -975,7 +1009,7 @@ function renderLeadCard(d, review, realIdx) {
       pvpHtml = `
         <div class="lead-pvp" onclick="this.classList.toggle('expanded')">
           ${d.pvp_subject ? `<div class="lead-pvp-subject"><strong>Assunto:</strong> ${escapeHtml(d.pvp_subject)}</div>` : ''}
-          <div class="lead-pvp-body">${escapeHtml(d.pvp_body)}</div>
+          <div class="lead-pvp-body">${escapeHtml((d.pvp_body || '').replace(/\{BDR\}/g, currentReviewer || 'BDR'))}</div>
         </div>`;
     }
 
@@ -1151,7 +1185,7 @@ window.addEventListener('beforeunload', () => {
       const key = getItemKey(LEADS_RAW[idx]);
       if (!reviewsByKey[key]) reviewsByKey[key] = { status: 'new', notes: '', rating: 0, reviewed_at: new Date().toISOString() };
       reviewsByKey[key].notes = ta.value;
-      localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+      localStorage.setItem('appmax_qa_reviews_cache_v2', JSON.stringify(reviewsAllBDRs));
     }
   }
 });
