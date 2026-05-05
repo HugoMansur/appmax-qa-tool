@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AppMax QA — Validacao Onda 1 (30 leads)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-bg:#1a1625;
+  --sidebar-accent:#231a30;
+  --card-bg:#ffffff;
+  --body-bg:#f5f3f0;
+
+  /* AppMax brand */
+  --accent:#FF5A1F;
+  --accent-dark:#e04617;
+  --accent-light:#ffe3d6;
+
+  /* Status colors */
+  --green:#10b981;
+  --green-light:#d1fae5;
+  --red:#ef4444;
+  --red-light:#fee2e2;
+  --amber:#f59e0b;
+  --amber-light:#fef3c7;
+  --blue:#0ea5e9;
+  --blue-light:#e0f2fe;
+  --violet:#8b5cf6;
+  --violet-light:#ede9fe;
+  --emerald:#10b981;
+  --emerald-light:#d1fae5;
+  --rose:#f43f5e;
+  --rose-light:#ffe4e6;
+
+  /* Neutrals */
+  --text-primary:#1e293b;
+  --text-secondary:#64748b;
+  --text-muted:#94a3b8;
+  --border:#e2e8f0;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+  --radius:12px;
+  --radius-sm:8px;
+  --transition:all .2s ease;
+}
+html{font-size:15px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--body-bg);color:var(--text-primary);display:flex;min-height:100vh;overflow:hidden}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.sidebar{width:300px;min-width:300px;background:var(--sidebar-bg);color:#e2e8f0;display:flex;flex-direction:column;padding:0;height:100vh;overflow-y:auto;z-index:10}
+.sidebar-header{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-header h1{font-size:1.2rem;font-weight:800;letter-spacing:-.02em}
+.sidebar-header h1 .brand{color:var(--accent)}
+.sidebar-header p{font-size:.75rem;color:var(--text-muted);margin-top:4px}
+.sidebar-header .reviewer-chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,90,31,.15);color:var(--accent);border:1px solid rgba(255,90,31,.3);padding:4px 10px;border-radius:12px;font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition)}
+.sidebar-header .reviewer-chip:hover{background:rgba(255,90,31,.25)}
+
+/* Reviewer tabs (Eduardo / Lucas) */
+.reviewer-tabs{display:flex;gap:4px;margin-top:12px;background:rgba(255,255,255,.04);padding:3px;border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+.reviewer-tab{flex:1;padding:7px 10px;border:none;background:transparent;color:#94a3b8;font-size:.78rem;font-weight:600;cursor:pointer;border-radius:7px;transition:var(--transition);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.reviewer-tab:hover{color:#e2e8f0;background:rgba(255,255,255,.04)}
+.reviewer-tab.active{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.reviewer-tab .tab-count{background:rgba(0,0,0,.2);padding:1px 6px;border-radius:8px;font-size:.65rem;font-weight:700}
+.reviewer-tab.active .tab-count{background:rgba(255,255,255,.2)}
+
+.filter-section{padding:16px 20px}
+.filter-section h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px;font-weight:600}
+.filter-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;border:none;background:transparent;color:#cbd5e1;font-size:.82rem;cursor:pointer;border-radius:var(--radius-sm);transition:var(--transition);text-align:left;font-family:inherit}
+.filter-btn:hover{background:rgba(255,255,255,.06)}
+.filter-btn.active{background:rgba(255,90,31,.18);color:#fff;font-weight:600}
+.filter-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.filter-dot.all{background:#fff}
+.filter-dot.new{background:var(--text-muted)}
+.filter-dot.approved{background:var(--green)}
+.filter-dot.rejected{background:var(--red)}
+.filter-dot.maybe{background:var(--amber)}
+.filter-count{margin-left:auto;font-size:.72rem;background:rgba(255,255,255,.08);padding:2px 8px;border-radius:10px;min-width:24px;text-align:center}
+
+/* PQS toggle pills */
+.pqs-section{padding:12px 20px;border-top:1px solid rgba(255,255,255,.06)}
+.pqs-section h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px;font-weight:600}
+.pqs-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;border:none;background:transparent;color:#cbd5e1;font-size:.78rem;cursor:pointer;border-radius:var(--radius-sm);transition:var(--transition);text-align:left;font-family:inherit;margin-bottom:4px}
+.pqs-btn:hover{background:rgba(255,255,255,.06)}
+.pqs-btn.active{background:var(--accent);color:#fff;font-weight:600}
+.pqs-btn .pqs-tag{font-size:.65rem;background:rgba(255,255,255,.18);padding:2px 6px;border-radius:4px;font-weight:700;margin-right:4px}
+
+/* Progress ring */
+.progress-section{padding:20px;display:flex;flex-direction:column;align-items:center;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.progress-ring-container{position:relative;width:100px;height:100px}
+.progress-ring{transform:rotate(-90deg)}
+.progress-ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:8}
+.progress-ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.progress-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:800;color:#fff}
+.progress-label{margin-top:8px;font-size:.75rem;color:var(--text-muted)}
+
+.stats-section{padding:16px 20px}
+.stat-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.82rem;color:#cbd5e1}
+.stat-row .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.stat-row .val{margin-left:auto;font-weight:700;color:#fff}
+
+.shortcuts-section{padding:12px 20px 20px;border-top:1px solid rgba(255,255,255,.06)}
+.shortcuts-section h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px;font-weight:600}
+.shortcut-row{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-muted);padding:3px 0}
+.kbd{background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px;font-size:.68rem;font-family:monospace;color:#cbd5e1;border:1px solid rgba(255,255,255,.12)}
+
+.export-section{padding:16px 20px;margin-top:auto;border-top:1px solid rgba(255,255,255,.06)}
+.export-btn{width:100%;padding:12px;border:none;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+.export-btn.primary{background:var(--accent);color:#fff}
+.export-btn.primary:hover{background:var(--accent-dark)}
+.export-btn.secondary{background:rgba(255,255,255,.06);color:#cbd5e1;margin-top:8px}
+.export-btn.secondary:hover{background:rgba(255,255,255,.12)}
+
+/* ============================================================
+   MAIN
+============================================================ */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{display:flex;align-items:center;padding:16px 32px;background:#fff;border-bottom:1px solid var(--border);gap:16px;flex-shrink:0}
+.topbar-nav{display:flex;gap:8px}
+.nav-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);font-size:1.1rem;color:var(--text-secondary);font-family:inherit}
+.nav-btn:hover{background:var(--body-bg);border-color:var(--text-muted)}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.topbar-counter{font-size:.9rem;color:var(--text-secondary);font-weight:600;margin-left:4px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.undo-btn{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.8rem;color:var(--text-secondary);transition:var(--transition);display:flex;align-items:center;gap:6px;font-family:inherit}
+.undo-btn:hover{background:var(--body-bg)}
+.undo-btn:disabled{opacity:.3;cursor:not-allowed}
+.sync-status{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-muted);padding:4px 10px;border-radius:10px;background:var(--body-bg)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.sync-status.syncing .sync-dot{background:var(--amber);animation:pulse 1.5s infinite}
+.sync-status.offline .sync-dot{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.card-area{flex:1;overflow-y:auto;padding:24px 32px;display:flex;justify-content:center;align-items:flex-start}
+.card-wrapper{width:100%;max-width:820px}
+.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;animation:cardIn .3s ease}
+@keyframes cardIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes cardInReverse{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+.card.reverse{animation-name:cardInReverse}
+
+/* Card header */
+.card-header{padding:24px 28px 16px;border-bottom:1px solid var(--border)}
+.card-header-top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.card-avatar{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;flex-shrink:0}
+.card-title-block{flex:1;min-width:0}
+.card-title{font-size:1.25rem;font-weight:800;color:var(--text-primary);line-height:1.3}
+.card-subtitle{font-size:.85rem;color:var(--text-secondary);margin-top:4px}
+.badge{padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.badge-status{font-size:.68rem}
+.badge-new{background:#f1f5f9;color:var(--text-muted)}
+.badge-approved{background:var(--green-light);color:#065f46}
+.badge-rejected{background:var(--red-light);color:#991b1b}
+.badge-maybe{background:var(--amber-light);color:#92400e}
+.badge-pqs1{background:#fef3c7;color:#92400e}
+.badge-pqs2{background:#fee2e2;color:#991b1b}
+.badge-pqs3{background:#dbeafe;color:#1e40af}
+.badge-disagree{background:var(--rose-light);color:#9f1239;display:inline-flex;align-items:center;gap:4px}
+
+/* Chips */
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;padding:12px 28px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:500;background:#f1f5f9;color:var(--text-secondary);text-decoration:none;transition:var(--transition);border:none;cursor:default;font-family:inherit}
+a.chip{cursor:pointer}
+a.chip:hover{background:var(--accent-light);color:var(--accent-dark)}
+.chip-icon{font-size:.85rem}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 28px}
+.stat-card{background:#f8fafc;border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
+.stat-card .stat-val{font-size:1.15rem;font-weight:800;color:var(--text-primary);line-height:1.2}
+.stat-card .stat-lbl{font-size:.68rem;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.stat-card.highlight{border-color:var(--accent);background:var(--accent-light)}
+
+/* Enrichment section */
+.enrichment-section{padding:16px 28px 0}
+.enrichment-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:10px;font-weight:700}
+.enrichment-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.enrich-item{display:flex;flex-direction:column;background:#fef7f2;border:1px solid #fde3d1;border-radius:var(--radius-sm);padding:10px 12px}
+.enrich-item .enrich-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;color:#9a4b1e;font-weight:700;margin-bottom:2px}
+.enrich-item .enrich-val{font-size:.82rem;font-weight:600;color:var(--text-primary)}
+.enrich-item.positive{background:var(--green-light);border-color:#a7f3d0}
+.enrich-item.positive .enrich-lbl{color:#065f46}
+.enrich-item.negative{background:var(--red-light);border-color:#fecaca}
+.enrich-item.negative .enrich-lbl{color:#991b1b}
+.enrich-item.neutral{background:#f1f5f9;border-color:var(--border)}
+.enrich-item.neutral .enrich-lbl{color:var(--text-muted)}
+
+/* Bonus Ferla — stack fragmentada */
+.bonus-ferla{margin:12px 28px 0;padding:14px 16px;background:linear-gradient(135deg,#ede9fe 0%,#e0e7ff 100%);border:1px solid #c7d2fe;border-radius:var(--radius-sm)}
+.bonus-ferla-title{display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;color:#4338ca;margin-bottom:6px}
+.bonus-ferla-desc{font-size:.78rem;color:#4c1d95;line-height:1.5}
+.bonus-ferla-providers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.bonus-provider-chip{background:#fff;border:1px solid #c7d2fe;color:#4338ca;padding:3px 10px;border-radius:10px;font-size:.7rem;font-weight:600}
+
+/* Leads section inside company card */
+.leads-section{margin:16px 28px;border-radius:var(--radius-sm);background:#f8fafc;border:1px solid var(--border);overflow:hidden}
+.leads-section-header{display:flex;align-items:center;gap:8px;padding:14px 16px;background:#f1f5f9;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.leads-section-header h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);font-weight:700;flex:1}
+.leads-section-header .leads-count{font-size:.72rem;background:var(--accent);color:#fff;padding:2px 10px;border-radius:10px;font-weight:700}
+.leads-section-header .leads-toggle{font-size:.7rem;transition:transform .2s ease;display:inline-block;color:var(--text-muted)}
+.leads-section-header .leads-toggle.open{transform:rotate(90deg)}
+.leads-section-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.leads-section-body.expanded{max-height:5000px}
+.lead-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background .15s}
+.lead-row:last-child{border-bottom:none}
+.lead-row:hover{background:#fffaf7}
+.lead-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-light);color:var(--accent-dark);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
+.lead-info{flex:1;min-width:0}
+.lead-name{font-size:.9rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lead-cargo{font-size:.74rem;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lead-badges{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+.lead-badge{padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:600;white-space:nowrap}
+.lead-badge-source{background:var(--blue-light);color:#0369a1}
+.lead-badge-rfb{background:var(--green-light);color:#065f46}
+.lead-links{display:flex;gap:4px;flex-shrink:0}
+.lead-link{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;transition:var(--transition);background:#fff;color:var(--text-muted);border:1px solid var(--border)}
+.lead-link:hover{background:var(--accent-light);color:var(--accent-dark);border-color:var(--accent)}
+.lead-email-visible{margin-top:6px;font-family:'SF Mono','Menlo','Consolas',monospace;font-size:.82rem;background:var(--accent-light);color:var(--accent-dark);padding:5px 10px;border-radius:6px;border:1px solid var(--accent);display:inline-block;user-select:all;cursor:copy;font-weight:600}
+.lead-email-visible:hover{background:var(--accent);color:#fff}
+.lead-email-missing{margin-top:6px;font-size:.78rem;color:var(--amber);font-style:italic}
+.lead-linkedin-visible{margin-top:6px;margin-left:6px;font-size:.8rem;background:#0a66c2;color:#fff;padding:5px 10px;border-radius:6px;border:1px solid #0a66c2;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;transition:var(--transition)}
+.lead-linkedin-visible:hover{background:#084b94;border-color:#084b94}
+
+.lead-pvp{width:100%;margin-top:6px;padding:10px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:.8rem;color:var(--text-secondary);cursor:pointer;max-height:60px;overflow:hidden;transition:max-height .3s ease;position:relative}
+.lead-pvp.expanded{max-height:1200px;overflow:auto}
+.lead-pvp-subject{font-size:.72rem;color:var(--accent-dark);margin-bottom:4px;font-weight:700}
+.lead-pvp-subject strong{color:#9a4b1e}
+.lead-pvp-body{white-space:pre-wrap;line-height:1.5;font-size:.78rem}
+.lead-pvp::after{content:'Clique para expandir';position:absolute;bottom:4px;right:10px;font-size:.65rem;color:var(--accent);font-weight:600;opacity:.7;pointer-events:none}
+.lead-pvp.expanded::after{display:none}
+.leads-empty{padding:16px;text-align:center;font-size:.82rem;color:var(--text-muted);font-style:italic}
+
+/* Notes / Star rating */
+.star-rating-section{padding:12px 28px 0}
+.star-rating-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;font-weight:600}
+.star-rating{display:flex;gap:4px}
+.star-btn{background:none;border:none;font-size:1.6rem;cursor:pointer;color:#d1d5db;transition:color .15s,transform .15s;padding:2px;font-family:inherit}
+.star-btn:hover{transform:scale(1.2)}
+.star-btn.active{color:var(--accent)}
+.star-btn.hover-preview{color:var(--accent-light)}
+
+.notes-section{padding:12px 28px 16px}
+.notes-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;font-weight:600}
+.notes-textarea{width:100%;min-height:80px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.84rem;resize:vertical;transition:border-color .2s;color:var(--text-primary);background:#fff}
+.notes-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,90,31,.15)}
+.notes-textarea::placeholder{color:var(--text-muted)}
+
+/* Action buttons */
+.action-buttons{display:flex;gap:10px;padding:16px 28px 24px}
+.action-btn{flex:1;padding:14px;border:none;border-radius:var(--radius-sm);font-size:.9rem;font-weight:700;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+.action-btn:active{transform:scale(.97)}
+.btn-approve{background:var(--green);color:#fff}
+.btn-approve:hover{background:#059669;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.btn-reject{background:var(--red);color:#fff}
+.btn-reject:hover{background:#dc2626;box-shadow:0 4px 12px rgba(239,68,68,.3)}
+.btn-maybe{background:var(--amber);color:#fff}
+.btn-maybe:hover{background:#d97706;box-shadow:0 4px 12px rgba(245,158,11,.3)}
+
+/* Empty / loading states */
+.empty-state,.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;text-align:center}
+.empty-state-icon{font-size:3rem;margin-bottom:16px;opacity:.3}
+.empty-state h2,.loading-state h2{font-size:1.2rem;color:var(--text-secondary);font-weight:600;margin-bottom:8px}
+.empty-state p{font-size:.88rem;color:var(--text-muted)}
+.loading-spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 24px;border-radius:var(--radius-sm);color:#fff;font-size:.85rem;font-weight:600;transform:translateY(100px);opacity:0;transition:all .3s ease;z-index:100;box-shadow:var(--shadow-lg)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.green{background:var(--green)}
+.toast.red{background:var(--red)}
+.toast.amber{background:var(--amber)}
+.toast.blue{background:var(--blue)}
+
+/* Modal (reviewer prompt) */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px)}
+.modal{background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:var(--shadow-lg);animation:cardIn .3s ease}
+.modal h2{font-size:1.3rem;font-weight:800;color:var(--text-primary);margin-bottom:8px}
+.modal h2 .brand{color:var(--accent)}
+.modal p{font-size:.9rem;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+.modal-buttons{display:flex;gap:12px}
+.modal-btn{flex:1;padding:14px;border:2px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:.95rem;font-weight:700;cursor:pointer;transition:var(--transition);font-family:inherit;color:var(--text-primary)}
+.modal-btn:hover{border-color:var(--accent);background:var(--accent-light);color:var(--accent-dark)}
+
+/* Responsive */
+@media(max-width:1200px){
+  .sidebar{width:260px;min-width:260px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .sidebar{width:240px;min-width:240px}
+  .enrichment-grid{grid-template-columns:1fr}
+  .card-area{padding:16px}
+  .topbar{padding:12px 16px}
+}
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sidebar{width:100%;min-width:100%;height:auto;max-height:50vh;order:2}
+  .main{order:1;height:auto;min-height:60vh}
+  .action-buttons{flex-direction:column}
+}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1><span class="brand">AppMax</span> QA</h1>
+    <p>Validacao Onda 1 &middot; 30 leads</p>
+    <div class="reviewer-tabs" role="tablist" aria-label="Revisor">
+      <button class="reviewer-tab" id="tabEduardo" role="tab" onclick="setReviewer('Eduardo')" title="Revisar como Eduardo">
+        <span>&#128100;</span>
+        <span>Eduardo</span>
+        <span class="tab-count" id="countEduardo">0</span>
+      </button>
+      <button class="reviewer-tab" id="tabLucas" role="tab" onclick="setReviewer('Lucas')" title="Revisar como Lucas">
+        <span>&#128100;</span>
+        <span>Lucas</span>
+        <span class="tab-count" id="countLucas">0</span>
+      </button>
+    </div>
+    <span class="reviewer-chip" id="reviewerChip" style="display:none" onclick="promptReviewer()"><span id="reviewerName">--</span></span>
+  </div>
+
+  <div class="pqs-section">
+    <h3>PQS Filter</h3>
+    <button class="pqs-btn active" data-pqs="all" onclick="setPqsFilter('all')">
+      <span class="pqs-tag">ALL</span> Todos PQSs
+      <span class="filter-count" id="pqsCountAll" style="margin-left:auto">0</span>
+    </button>
+    <button class="pqs-btn" data-pqs="pqs1" onclick="setPqsFilter('pqs1')">
+      <span class="pqs-tag">PQS-1</span> Aprovacao
+      <span class="filter-count" id="pqsCountP1" style="margin-left:auto">0</span>
+    </button>
+    <button class="pqs-btn" data-pqs="pqs2" onclick="setPqsFilter('pqs2')">
+      <span class="pqs-tag">PQS-2</span> Chargeback
+      <span class="filter-count" id="pqsCountP2" style="margin-left:auto">0</span>
+    </button>
+    <button class="pqs-btn" data-pqs="pqs3" onclick="setPqsFilter('pqs3')">
+      <span class="pqs-tag">PQS-3</span> Parcelamento
+      <span class="filter-count" id="pqsCountP3" style="margin-left:auto">0</span>
+    </button>
+  </div>
+
+  <div class="filter-section">
+    <h3>Status</h3>
+    <button class="filter-btn active" data-filter="all" onclick="setStatusFilter('all')">
+      <span class="filter-dot all"></span>
+      Todos
+      <span class="filter-count" id="filterCountAll">0</span>
+    </button>
+    <button class="filter-btn" data-filter="new" onclick="setStatusFilter('new')">
+      <span class="filter-dot new"></span>
+      Novos
+      <span class="filter-count" id="filterCountNew">0</span>
+    </button>
+    <button class="filter-btn" data-filter="approved" onclick="setStatusFilter('approved')">
+      <span class="filter-dot approved"></span>
+      Aprovados
+      <span class="filter-count" id="filterCountApproved">0</span>
+    </button>
+    <button class="filter-btn" data-filter="rejected" onclick="setStatusFilter('rejected')">
+      <span class="filter-dot rejected"></span>
+      Rejeitados
+      <span class="filter-count" id="filterCountRejected">0</span>
+    </button>
+    <button class="filter-btn" data-filter="maybe" onclick="setStatusFilter('maybe')">
+      <span class="filter-dot maybe"></span>
+      Talvez
+      <span class="filter-count" id="filterCountMaybe">0</span>
+    </button>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-ring-container">
+      <svg class="progress-ring" width="100" height="100" viewBox="0 0 100 100">
+        <circle class="progress-ring-bg" cx="50" cy="50" r="42"/>
+        <circle class="progress-ring-fill" id="progressRing" cx="50" cy="50" r="42"
+          stroke-dasharray="263.89" stroke-dashoffset="263.89"/>
+      </svg>
+      <div class="progress-text" id="progressText">0%</div>
+    </div>
+    <div class="progress-label">Revisados</div>
+  </div>
+
+  <div class="stats-section">
+    <div class="stat-row"><span class="dot" style="background:var(--green)"></span> Aprovados <span class="val" id="statApproved">0</span></div>
+    <div class="stat-row"><span class="dot" style="background:var(--red)"></span> Rejeitados <span class="val" id="statRejected">0</span></div>
+    <div class="stat-row"><span class="dot" style="background:var(--amber)"></span> Talvez <span class="val" id="statMaybe">0</span></div>
+  </div>
+
+  <div class="shortcuts-section">
+    <h3>Atalhos</h3>
+    <div class="shortcut-row"><kbd class="kbd">&uarr;</kbd> Aprovar</div>
+    <div class="shortcut-row"><kbd class="kbd">&darr;</kbd> Rejeitar</div>
+    <div class="shortcut-row"><kbd class="kbd">Shift</kbd> Talvez</div>
+    <div class="shortcut-row"><kbd class="kbd">&larr;</kbd> / <kbd class="kbd">&rarr;</kbd> Navegar</div>
+    <div class="shortcut-row"><kbd class="kbd">Ctrl+Z</kbd> Desfazer</div>
+  </div>
+
+  <div class="export-section">
+    <button class="export-btn primary" onclick="exportCSV()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+    <button class="export-btn secondary" onclick="exportJSON()">
+      Export JSON (Both BDRs)
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-nav">
+      <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" title="Anterior (Left Arrow)">&larr;</button>
+      <button class="nav-btn" id="btnNext" onclick="navigate(1)" title="Proximo (Right Arrow)">&rarr;</button>
+    </div>
+    <span class="topbar-counter" id="topbarCounter">0 / 0</span>
+    <div class="topbar-right">
+      <span class="sync-status" id="syncStatus"><span class="sync-dot"></span><span id="syncText">Sincronizado</span></span>
+      <button class="undo-btn" id="undoBtn" onclick="undo()" disabled title="Ctrl+Z">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-11.36L1 10"/></svg>
+        Desfazer
+      </button>
+    </div>
+  </div>
+
+  <div class="card-area" id="cardArea">
+    <div class="card-wrapper"><div class="card"><div class="loading-state">
+      <div class="loading-spinner"></div>
+      <h2>Carregando leads do Supabase...</h2>
+    </div></div></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Reviewer prompt modal (shown if no reviewer in localStorage) -->
+<div class="modal-backdrop" id="reviewerModal" style="display:none">
+  <div class="modal">
+    <h2>Quem esta validando hoje?</h2>
+    <p>Selecione seu nome pra persistir suas revisoes. Lucas e Eduardo validam os mesmos 30 leads — discordancia vira sinal.</p>
+    <div class="modal-buttons">
+      <button class="modal-btn" onclick="setReviewer('Lucas')">Lucas</button>
+      <button class="modal-btn" onclick="setReviewer('Eduardo')">Eduardo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =================================================================
+// AppMax QA Tool — Card-Based Review (Supabase + Vanilla JS)
+// Template base: Mevo PQS4/PQS1 reference
+// =================================================================
+
+// -----------------------------------------------------------------
+// SUPABASE CONFIG — SOURCE OF TRUTH
+// -----------------------------------------------------------------
+// Colar URL + ANON KEY do projeto Supabase appmax-qa.
+// Antes disso, rodar no SQL Editor (nesta ordem):
+//   1. supabase-migration-leads.sql   (cria/migra appmax_leads)
+//   2. supabase-migration-reviews.sql (cria appmax_leads_reviews + view)
+//   3. supabase-upsert-leads.sql      (semeia os 31 leads)
+// Enquanto SUPABASE_URL/SUPABASE_ANON_KEY ficarem como REPLACE_ME, o tool roda em
+// modo local seed (LOCAL_SEED_LEADS abaixo) só pra visualização — não persiste review.
+const SUPABASE_URL = 'https://dzsvbklojjvmjwcizkxi.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6c3Zia2xvamp2bWp3Y2l6a3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzY2OTMsImV4cCI6MjA5MDQxMjY5M30.jzE0RhN4UWEH13dUNqFY2XtPbnyXwuE_d_FvDVFjg88';
+const SUPABASE_KEY = SUPABASE_ANON_KEY; // alias interno (código legado usa SUPABASE_KEY)
+const TABLE_ITEMS   = 'appmax_leads';
+const TABLE_REVIEWS = 'appmax_leads_reviews';
+
+const USE_DUMMY_DATA = !SUPABASE_URL || SUPABASE_URL.startsWith('REPLACE_ME');
+
+// -----------------------------------------------------------------
+// LOCAL SEED (fallback visual quando credenciais Supabase não preenchidas).
+// Supabase é source of truth. Este array é apenas snapshot do
+// data/leads-qa-data.json mais recente — mantido para dev/preview offline.
+// -----------------------------------------------------------------
+const DUMMY_LEADS = [];  // Source of truth = Supabase. Array vazio = sem fallback local.
+
+// =================================================================
+// SUPABASE CLIENT (fetch-based, sem dependencia externa)
+// =================================================================
+async function supaFetch(path, options = {}) {
+  if (USE_DUMMY_DATA) {
+    throw new Error('USE_DUMMY_DATA');
+  }
+  const url = `${SUPABASE_URL}/rest/v1/${path}`;
+  const prefer = options.method === 'POST' ? 'resolution=merge-duplicates,return=minimal'
+    : options.method === 'DELETE' ? 'return=minimal'
+    : 'return=representation';
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': prefer
+  };
+  const res = await fetch(url, { method: options.method || 'GET', headers, body: options.body });
+  if (!res.ok) {
+    const txt = await res.text();
+    console.error('Supabase error:', res.status, txt);
+    throw new Error(`Supabase ${res.status}: ${txt}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+// =================================================================
+// STATE
+// =================================================================
+let LEADS_RAW = [];                 // all leads loaded (pqs1 + pqs2 + pqs3)
+let reviewsByKey = {};              // reviews do BDR atual — key = lead_id
+let reviewsAllBDRs = {};            // reviews de TODOS BDRs — key = lead_id, value = { Lucas: {...}, Eduardo: {...} }
+let currentReviewer = null;         // 'Lucas' ou 'Eduardo'
+
+let currentStatusFilter = 'all';
+let currentPqsFilter = 'all';
+let currentIndex = 0;
+let filteredIndices = [];
+let undoStack = [];
+let navDirection = 1;
+let notesSaveTimer = null;
+let dataLoaded = false;
+let shiftPressed = false; // Shift key detection for 'maybe' action
+
+// =================================================================
+// REVIEWER MANAGEMENT (localStorage persist)
+// =================================================================
+function getReviewer() {
+  return localStorage.getItem('appmax_qa_reviewer');
+}
+
+function setReviewer(name) {
+  localStorage.setItem('appmax_qa_reviewer', name);
+  currentReviewer = name;
+  const rnEl = document.getElementById('reviewerName');
+  if (rnEl) rnEl.textContent = name;
+  const modal = document.getElementById('reviewerModal');
+  if (modal) modal.style.display = 'none';
+  // Update tab visual state
+  const tabE = document.getElementById('tabEduardo');
+  const tabL = document.getElementById('tabLucas');
+  if (tabE && tabL) {
+    tabE.classList.toggle('active', name === 'Eduardo');
+    tabL.classList.toggle('active', name === 'Lucas');
+  }
+  // Rebuild local reviews map for this reviewer
+  rebuildReviewsForCurrentReviewer();
+  if (dataLoaded) {
+    buildFilteredIndices();
+    renderCard();
+    updateSidebar();
+  updateReviewerTabCounts();
+    updateReviewerTabCounts();
+  }
+  showToast(`Validando como ${name}`, 'blue');
+}
+
+function updateReviewerTabCounts() {
+  // Conta leads revisados (approved+rejected+maybe) por cada BDR
+  const counts = { Eduardo: 0, Lucas: 0 };
+  Object.keys(reviewsAllBDRs).forEach(leadId => {
+    const per = reviewsAllBDRs[leadId] || {};
+    ['Eduardo', 'Lucas'].forEach(bdr => {
+      const r = per[bdr];
+      if (r && r.status && r.status !== 'new') counts[bdr]++;
+    });
+  });
+  const total = LEADS_RAW.length || 0;
+  const cE = document.getElementById('countEduardo');
+  const cL = document.getElementById('countLucas');
+  if (cE) cE.textContent = total ? `${counts.Eduardo}/${total}` : counts.Eduardo;
+  if (cL) cL.textContent = total ? `${counts.Lucas}/${total}` : counts.Lucas;
+}
+
+function promptReviewer() {
+  document.getElementById('reviewerModal').style.display = 'flex';
+}
+
+function rebuildReviewsForCurrentReviewer() {
+  reviewsByKey = {};
+  Object.keys(reviewsAllBDRs).forEach(leadId => {
+    const r = reviewsAllBDRs[leadId][currentReviewer];
+    if (r) reviewsByKey[leadId] = r;
+  });
+}
+
+// =================================================================
+// KEY / REVIEW HELPERS
+// =================================================================
+function getItemKey(item) {
+  return item.lead_id || item.cnpj || item.website || '';
+}
+
+function getReview(idx) {
+  const key = getItemKey(LEADS_RAW[idx]);
+  return reviewsByKey[key] || { status: 'new', notes: '', rating: 0, reviewed_at: '' };
+}
+
+function getDisagreementFlag(idx) {
+  const key = getItemKey(LEADS_RAW[idx]);
+  const all = reviewsAllBDRs[key] || {};
+  const lucas = (all['Lucas'] || {}).status;
+  const eduardo = (all['Eduardo'] || {}).status;
+  if (!lucas || !eduardo) return false;
+  if (lucas === 'new' || eduardo === 'new') return false;
+  return lucas !== eduardo;
+}
+
+// =================================================================
+// SUPABASE PERSISTENCE
+// =================================================================
+async function loadLeadsFromSupabase() {
+  try {
+    setSyncStatus('syncing');
+    const leads = await supaFetch(
+      `${TABLE_ITEMS}?select=*&pqs=in.(pqs1,pqs2,pqs3)&order=pqs.asc,tpv_projetado.desc`
+    );
+    LEADS_RAW = leads || [];
+    localStorage.setItem('appmax_qa_leads_cache', JSON.stringify(LEADS_RAW));
+    setSyncStatus('synced');
+  } catch(e) {
+    if (e.message === 'USE_DUMMY_DATA') {
+      LEADS_RAW = DUMMY_LEADS;
+      setSyncStatus('offline');
+      showToast('Modo LOCAL SEED — preencher SUPABASE_URL/ANON_KEY pra persistir reviews', 'amber');
+      return;
+    }
+    console.warn('Fetch falhou, usando cache localStorage:', e);
+    setSyncStatus('offline');
+    const cache = localStorage.getItem('appmax_qa_leads_cache');
+    if (cache) {
+      try { LEADS_RAW = JSON.parse(cache); } catch(_) { LEADS_RAW = []; }
+    }
+  }
+}
+
+async function loadReviewsFromSupabase() {
+  reviewsAllBDRs = {};
+  try {
+    const revs = await supaFetch(`${TABLE_REVIEWS}?select=*`);
+    (revs || []).forEach(r => {
+      if (!reviewsAllBDRs[r.lead_id]) reviewsAllBDRs[r.lead_id] = {};
+      reviewsAllBDRs[r.lead_id][r.reviewer_name] = {
+        status: r.status || 'new',
+        notes: r.notes || '',
+        rating: r.rating || 0,
+        reviewed_at: r.reviewed_at || ''
+      };
+    });
+    localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+  } catch(e) {
+    if (e.message === 'USE_DUMMY_DATA') {
+      return;
+    }
+    console.warn('Falha ao carregar reviews Supabase, tentando cache:', e);
+    const cache = localStorage.getItem('appmax_qa_reviews_cache');
+    if (cache) {
+      try { reviewsAllBDRs = JSON.parse(cache); } catch(_) { reviewsAllBDRs = {}; }
+    }
+  }
+  rebuildReviewsForCurrentReviewer();
+}
+
+async function saveReviewToSupabase(key, review) {
+  // Always update local cache first
+  if (!reviewsAllBDRs[key]) reviewsAllBDRs[key] = {};
+  reviewsAllBDRs[key][currentReviewer] = review;
+  localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+
+  if (USE_DUMMY_DATA) return;
+
+  try {
+    setSyncStatus('syncing');
+    await supaFetch(TABLE_REVIEWS, {
+      method: 'POST',
+      body: JSON.stringify({
+        lead_id: key,
+        reviewer_name: currentReviewer,
+        status: review.status,
+        notes: review.notes || '',
+        rating: review.rating || 0,
+        reviewed_at: review.reviewed_at,
+        updated_at: new Date().toISOString()
+      })
+    });
+    setSyncStatus('synced');
+  } catch(e) {
+    console.warn('Falha ao salvar review no Supabase:', e);
+    setSyncStatus('offline');
+  }
+}
+
+function setSyncStatus(state) {
+  const el = document.getElementById('syncStatus');
+  const txt = document.getElementById('syncText');
+  el.classList.remove('syncing', 'offline');
+  if (state === 'syncing') { el.classList.add('syncing'); txt.textContent = 'Sincronizando...'; }
+  else if (state === 'offline') { el.classList.add('offline'); txt.textContent = USE_DUMMY_DATA ? 'Local Seed (sem Supabase)' : 'Offline (cache)'; }
+  else txt.textContent = 'Sincronizado';
+}
+
+function setReview(idx, status, notes, rating) {
+  const key = getItemKey(LEADS_RAW[idx]);
+  const prev = reviewsByKey[key] ? {...reviewsByKey[key]} : { status: 'new', notes: '', rating: 0, reviewed_at: '' };
+  undoStack.push({ key, prev: {...prev} });
+  if (undoStack.length > 10) undoStack.shift();
+  reviewsByKey[key] = {
+    status,
+    notes: notes !== undefined ? notes : prev.notes,
+    rating: rating !== undefined ? rating : prev.rating,
+    reviewed_at: new Date().toISOString()
+  };
+  document.getElementById('undoBtn').disabled = false;
+  saveReviewToSupabase(key, reviewsByKey[key]);
+}
+
+// =================================================================
+// FILTERING
+// =================================================================
+function buildFilteredIndices() {
+  filteredIndices = [];
+  for (let i = 0; i < LEADS_RAW.length; i++) {
+    const lead = LEADS_RAW[i];
+    // PQS filter
+    if (currentPqsFilter !== 'all' && lead.pqs !== currentPqsFilter) continue;
+    // Status filter
+    const key = getItemKey(lead);
+    const s = (reviewsByKey[key] || { status: 'new' }).status;
+    if (currentStatusFilter !== 'all' && currentStatusFilter !== s) continue;
+    filteredIndices.push(i);
+  }
+}
+
+function setStatusFilter(f) {
+  currentStatusFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+  buildFilteredIndices();
+  currentIndex = 0;
+  renderCard();
+  updateSidebar();
+  updateReviewerTabCounts();
+}
+
+function setPqsFilter(p) {
+  currentPqsFilter = p;
+  document.querySelectorAll('.pqs-btn').forEach(b => b.classList.toggle('active', b.dataset.pqs === p));
+  buildFilteredIndices();
+  currentIndex = 0;
+  renderCard();
+  updateSidebar();
+  updateReviewerTabCounts();
+}
+
+// =================================================================
+// NAVIGATION
+// =================================================================
+function navigate(dir) {
+  if (filteredIndices.length === 0) return;
+  navDirection = dir;
+  currentIndex = Math.max(0, Math.min(filteredIndices.length - 1, currentIndex + dir));
+  renderCard();
+  updateNav();
+}
+
+function updateNav() {
+  document.getElementById('btnPrev').disabled = currentIndex <= 0;
+  document.getElementById('btnNext').disabled = currentIndex >= filteredIndices.length - 1;
+  document.getElementById('topbarCounter').textContent = filteredIndices.length > 0
+    ? `${currentIndex + 1} / ${filteredIndices.length}`
+    : '0 / 0';
+}
+
+// =================================================================
+// UNDO
+// =================================================================
+function undo() {
+  if (undoStack.length === 0) return;
+  const action = undoStack.pop();
+  const isEmpty = action.prev.status === 'new' && !action.prev.notes && !action.prev.rating;
+  if (isEmpty) {
+    delete reviewsByKey[action.key];
+    if (reviewsAllBDRs[action.key]) delete reviewsAllBDRs[action.key][currentReviewer];
+  } else {
+    reviewsByKey[action.key] = action.prev;
+  }
+  const reviewToSync = isEmpty ? { status: 'new', notes: '', rating: 0, reviewed_at: new Date().toISOString() } : action.prev;
+  saveReviewToSupabase(action.key, reviewToSync);
+  document.getElementById('undoBtn').disabled = undoStack.length === 0;
+  buildFilteredIndices();
+  if (currentIndex >= filteredIndices.length) currentIndex = Math.max(0, filteredIndices.length - 1);
+  renderCard();
+  updateSidebar();
+  updateReviewerTabCounts();
+  showToast('Acao desfeita', 'blue');
+}
+
+// =================================================================
+// FORMATTING HELPERS
+// =================================================================
+function fmt(n) {
+  if (n == null || n === '') return '--';
+  const num = Number(n);
+  if (isNaN(num)) return String(n);
+  return num.toLocaleString('pt-BR');
+}
+
+function fmtBRL(n, compact) {
+  if (n == null || n === '') return '--';
+  const num = Number(n);
+  if (isNaN(num)) return String(n);
+  if (compact) {
+    if (num >= 1_000_000) return 'R$ ' + (num / 1_000_000).toFixed(num >= 10_000_000 ? 0 : 1) + 'M';
+    if (num >= 1_000) return 'R$ ' + (num / 1_000).toFixed(num >= 10_000 ? 0 : 1) + 'K';
+  }
+  return 'R$ ' + num.toLocaleString('pt-BR', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+}
+
+function statusBadge(status) {
+  const map = {
+    new: ['Novo', 'badge-new'],
+    approved: ['Aprovado', 'badge-approved'],
+    rejected: ['Rejeitado', 'badge-rejected'],
+    maybe: ['Talvez', 'badge-maybe']
+  };
+  const [label, cls] = map[status] || map.new;
+  return `<span class="badge badge-status ${cls}">${label}</span>`;
+}
+
+function pqsBadge(pqs) {
+  const map = {
+    pqs1: ['PQS-1 Aprovacao', 'badge-pqs1'],
+    pqs2: ['PQS-2 Chargeback', 'badge-pqs2'],
+    pqs3: ['PQS-3 Parcelamento', 'badge-pqs3']
+  };
+  const [label, cls] = map[pqs] || ['PQS-?', 'badge-pqs1'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+function initials(str) {
+  if (!str) return '??';
+  return String(str).split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+}
+
+// =================================================================
+// RENDER — CARD
+// =================================================================
+function renderLeadCard(d, review, realIdx) {
+  const anim = navDirection >= 0 ? '' : ' reverse';
+  const displayName = d.nome_fantasia || d.razao_social || d.website || 'Sem nome';
+  const disagreement = getDisagreementFlag(realIdx);
+
+  // --- Chips row ---
+  const chips = [];
+  if (d.website) {
+    const href = d.website.startsWith('http') ? d.website : 'https://' + d.website;
+    chips.push(`<a class="chip" href="${escapeHtml(href)}" target="_blank" rel="noopener"><span class="chip-icon">&#127760;</span>Website</a>`);
+  }
+  if (d.cnpj) chips.push(`<span class="chip"><span class="chip-icon">&#128196;</span>${escapeHtml(d.cnpj)}</span>`);
+  if (d.categoria) chips.push(`<span class="chip"><span class="chip-icon">&#127991;</span>${escapeHtml(d.categoria)}</span>`);
+  if (d.nicho) chips.push(`<span class="chip"><span class="chip-icon">&#127919;</span>${escapeHtml(d.nicho)}</span>`);
+
+  // --- Stats grid (6 cards) ---
+  const statsCards = [
+    { val: fmtBRL(d.tpv_projetado, true), label: 'TPV / mes' },
+    { val: fmtBRL(d.ticket_medio_produtos), label: 'Ticket Medio' },
+    { val: escapeHtml(d.gateway_atual || 'N/D'), label: 'Gateway Atual', highlight: !!d.gateway_atual },
+    { val: escapeHtml(d.plataforma || 'N/D'), label: 'Plataforma' },
+    { val: escapeHtml(d.categoria || 'N/D'), label: 'Vertical' },
+    { val: fmtBRL(d.tpv_projetado, true), label: 'Faturamento Estimado' }
+  ];
+
+  const statsHtml = statsCards.map(s =>
+    `<div class="stat-card${s.highlight ? ' highlight' : ''}"><div class="stat-val">${s.val}</div><div class="stat-lbl">${s.label}</div></div>`
+  ).join('');
+
+  // --- Enrichment section (PQS-specific) ---
+  let enrichHtml = '';
+  if (d.pqs === 'pqs1') {
+    const hasAntif = !!d.antifraude_proprio;
+    enrichHtml = `
+      <div class="enrich-item ${hasAntif ? 'positive' : 'neutral'}">
+        <span class="enrich-lbl">Antifraude Detectado</span>
+        <span class="enrich-val">${hasAntif ? escapeHtml(d.antifraude_proprio) : 'Nenhum'}</span>
+      </div>
+      <div class="enrich-item">
+        <span class="enrich-lbl">Benchmark Setor</span>
+        <span class="enrich-val">Aprovacao 82-85% em picos</span>
+      </div>
+    `;
+  } else if (d.pqs === 'pqs2') {
+    const tkHigh = Number(d.ticket_medio_produtos || 0) > 5000;
+    const hasAntif = !!d.antifraude_proprio;
+    enrichHtml = `
+      <div class="enrich-item ${tkHigh ? 'positive' : 'negative'}">
+        <span class="enrich-lbl">Ticket &gt; R$5K?</span>
+        <span class="enrich-val">${tkHigh ? 'SIM — ' + fmtBRL(d.ticket_medio_produtos) : 'NAO — ' + fmtBRL(d.ticket_medio_produtos)}</span>
+      </div>
+      <div class="enrich-item ${hasAntif ? 'positive' : 'negative'}">
+        <span class="enrich-lbl">Antifraude Proprio?</span>
+        <span class="enrich-val">${hasAntif ? escapeHtml(d.antifraude_proprio) : 'Nao detectado'}</span>
+      </div>
+    `;
+  } else if (d.pqs === 'pqs3') {
+    const parcOk = Number(d.parcelamento_max_checkout || 0) >= 6;
+    enrichHtml = `
+      <div class="enrich-item ${parcOk ? 'positive' : 'negative'}">
+        <span class="enrich-lbl">Parcelamento Checkout</span>
+        <span class="enrich-val">${d.parcelamento_max_checkout ? d.parcelamento_max_checkout + 'x' + (parcOk ? ' (OK)' : ' (baixo)') : 'N/D'}</span>
+      </div>
+      <div class="enrich-item">
+        <span class="enrich-lbl">Faturamento Estimado</span>
+        <span class="enrich-val">${fmtBRL(d.tpv_projetado, true)} / mes</span>
+      </div>
+    `;
+  }
+
+  const enrichmentSection = enrichHtml ? `
+    <div class="enrichment-section">
+      <h3>&#128270; Enrichment ${d.pqs ? d.pqs.toUpperCase() : ''}</h3>
+      <div class="enrichment-grid">${enrichHtml}</div>
+    </div>` : '';
+
+  // --- Bonus Ferla (stack fragmentada) ---
+  let bonusFerlaHtml = '';
+  if (d.stack_fragmentada) {
+    const providers = Array.isArray(d.fornecedores_detectados) ? d.fornecedores_detectados : [];
+    const providersChips = providers.map(p => `<span class="bonus-provider-chip">${escapeHtml(p)}</span>`).join('');
+    bonusFerlaHtml = `
+      <div class="bonus-ferla">
+        <div class="bonus-ferla-title">&#127919; BONUS — Stack fragmentada detectada</div>
+        <div class="bonus-ferla-desc">${providers.length} fornecedores separados. AppMax consolida em 1 — talking point pra PVP.</div>
+        ${providersChips ? `<div class="bonus-ferla-providers">${providersChips}</div>` : ''}
+      </div>`;
+  }
+
+  // --- Leads (decisores) section ---
+  // We have flat decisor_* fields on the lead itself. Since schema supports 1 decisor per lead row,
+  // render 1 decisor block per card (model = lead_id encodes decisor idx already).
+  let leadsHtml = '';
+  if (d.decisor_nome) {
+    const avatarInit = initials(d.decisor_nome);
+    const linksArr = [];
+    if (d.decisor_email) linksArr.push(`<a class="lead-link" href="mailto:${escapeHtml(d.decisor_email)}" title="${escapeHtml(d.decisor_email)}">&#9993;</a>`);
+    if (d.decisor_whatsapp) {
+      const waNum = String(d.decisor_whatsapp).replace(/\D/g, '');
+      linksArr.push(`<a class="lead-link" href="https://wa.me/${waNum}" target="_blank" title="WhatsApp: ${escapeHtml(d.decisor_whatsapp)}">&#128172;</a>`);
+    }
+    if (d.decisor_linkedin) linksArr.push(`<a class="lead-link" href="${escapeHtml(d.decisor_linkedin)}" target="_blank" rel="noopener" title="LinkedIn">&#128279;</a>`);
+
+    const badges = [];
+    if (d.decisor_source) badges.push(`<span class="lead-badge lead-badge-source">${escapeHtml(d.decisor_source)}</span>`);
+    if (d.decisor_rfb_validated) badges.push(`<span class="lead-badge lead-badge-rfb">RFB OK</span>`);
+
+    let pvpHtml = '';
+    if (d.pvp_body) {
+      pvpHtml = `
+        <div class="lead-pvp" onclick="this.classList.toggle('expanded')">
+          ${d.pvp_subject ? `<div class="lead-pvp-subject"><strong>Assunto:</strong> ${escapeHtml(d.pvp_subject)}</div>` : ''}
+          <div class="lead-pvp-body">${escapeHtml(d.pvp_body)}</div>
+        </div>`;
+    }
+
+    const emailVisivel = d.decisor_email
+      ? `<div class="lead-email-visible" title="Clique e Ctrl+C pra copiar">${escapeHtml(d.decisor_email)}</div>`
+      : `<div class="lead-email-missing">Sem email — usar canal alternativo (WhatsApp/Instagram/LinkedIn)</div>`;
+    const linkedinVisivel = d.decisor_linkedin
+      ? `<a class="lead-linkedin-visible" href="${escapeHtml(d.decisor_linkedin)}" target="_blank" rel="noopener" title="Abrir LinkedIn em nova aba">&#128279; Abrir LinkedIn</a>`
+      : '';
+    leadsHtml = `
+      <div class="lead-row">
+        <div class="lead-avatar">${avatarInit}</div>
+        <div class="lead-info">
+          <div class="lead-name">${escapeHtml(d.decisor_nome)}</div>
+          <div class="lead-cargo">${escapeHtml(d.decisor_cargo || '')}</div>
+          ${emailVisivel}${linkedinVisivel}
+        </div>
+        ${badges.length ? `<div class="lead-badges">${badges.join('')}</div>` : ''}
+        ${linksArr.length ? `<div class="lead-links">${linksArr.join('')}</div>` : ''}
+        ${pvpHtml}
+      </div>`;
+  } else {
+    leadsHtml = `<div class="leads-empty">Nenhum decisor enriquecido ainda</div>`;
+  }
+
+  const leadsSectionHtml = `
+    <div class="leads-section">
+      <div class="leads-section-header" onclick="toggleLeads(this)">
+        <h3>&#128100; Decisor e PVP</h3>
+        <span class="leads-count">${d.decisor_nome ? 1 : 0}</span>
+        <span class="leads-toggle open">&#9654;</span>
+      </div>
+      <div class="leads-section-body expanded">
+        ${leadsHtml}
+      </div>
+    </div>`;
+
+  // --- Resumo Bryan (if present) ---
+  const resumoHtml = d.resumo_executivo_bryan ? `
+    <div class="notes-section" style="padding-top:4px;padding-bottom:0">
+      <h3>&#128200; Resumo Executivo</h3>
+      <div style="background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-size:.82rem;color:var(--text-secondary);line-height:1.5">${escapeHtml(d.resumo_executivo_bryan)}</div>
+    </div>` : '';
+
+  // --- Final card ---
+  return `
+  <div class="card${anim}" id="currentCard">
+    <div class="card-header">
+      <div class="card-header-top">
+        <div class="card-avatar">${initials(displayName)}</div>
+        <div class="card-title-block">
+          <h2 class="card-title">${escapeHtml(displayName)}</h2>
+          <div class="card-subtitle">${escapeHtml(d.razao_social || '')}</div>
+        </div>
+        ${pqsBadge(d.pqs)}
+        ${statusBadge(review.status)}
+        ${disagreement ? '<span class="badge badge-disagree">&#9888; DISAGREEMENT</span>' : ''}
+      </div>
+    </div>
+
+    <div class="chips-row">
+      ${chips.join('')}
+    </div>
+
+    <div class="stats-grid">
+      ${statsHtml}
+    </div>
+
+    ${enrichmentSection}
+
+    ${bonusFerlaHtml}
+
+    ${resumoHtml}
+
+    ${leadsSectionHtml}
+
+    <div class="notes-section">
+      <h3>Observacoes do Revisor (${escapeHtml(currentReviewer || '--')})</h3>
+      <textarea class="notes-textarea" placeholder="Feedback qualitativo: lead faz sentido? mensagem bate com a dor? alguma objeção obvia?" data-idx="${realIdx}" oninput="debounceSaveNotes(this)">${escapeHtml(review.notes)}</textarea>
+    </div>
+
+    <div class="action-buttons">
+      <button class="action-btn btn-approve" onclick="doAction('approved')">&#10003; Aprovar</button>
+      <button class="action-btn btn-reject" onclick="doAction('rejected')">&#10007; Rejeitar</button>
+      <button class="action-btn btn-maybe" onclick="doAction('maybe')">&#8212; Talvez</button>
+    </div>
+  </div>`;
+}
+
+function toggleLeads(el) {
+  const body = el.nextElementSibling;
+  const arrow = el.querySelector('.leads-toggle');
+  body.classList.toggle('expanded');
+  arrow.classList.toggle('open');
+}
+
+function renderCard() {
+  const area = document.getElementById('cardArea');
+  if (!dataLoaded) return;
+
+  if (filteredIndices.length === 0) {
+    area.innerHTML = `<div class="card-wrapper"><div class="card"><div class="empty-state">
+      <div class="empty-state-icon">&#128269;</div>
+      <h2>Nenhum lead encontrado</h2>
+      <p>Ajuste os filtros de PQS ou Status pra ver mais leads.</p>
+    </div></div></div>`;
+    updateNav();
+    return;
+  }
+
+  const realIdx = filteredIndices[currentIndex];
+  const d = LEADS_RAW[realIdx];
+  const review = getReview(realIdx);
+  const html = renderLeadCard(d, review, realIdx);
+
+  area.innerHTML = `<div class="card-wrapper">${html}</div>`;
+  updateNav();
+}
+
+// =================================================================
+// ACTIONS
+// =================================================================
+function doAction(status) {
+  if (!currentReviewer) { promptReviewer(); return; }
+  if (filteredIndices.length === 0) return;
+
+  const realIdx = filteredIndices[currentIndex];
+  const ta = document.querySelector('.notes-textarea');
+  const notes = ta ? ta.value : getReview(realIdx).notes;
+  const rating = getReview(realIdx).rating;
+  setReview(realIdx, status, notes, rating);
+
+  const labels = { approved: 'Aprovado', rejected: 'Rejeitado', maybe: 'Talvez' };
+  const colors = { approved: 'green', rejected: 'red', maybe: 'amber' };
+  showToast(labels[status], colors[status]);
+
+  buildFilteredIndices();
+  if (currentStatusFilter !== 'all' && currentStatusFilter !== status) {
+    if (currentIndex >= filteredIndices.length) currentIndex = Math.max(0, filteredIndices.length - 1);
+  } else {
+    if (currentIndex < filteredIndices.length - 1) {
+      navDirection = 1;
+      currentIndex++;
+    }
+  }
+  renderCard();
+  updateSidebar();
+  updateReviewerTabCounts();
+}
+
+// =================================================================
+// NOTES DEBOUNCE
+// =================================================================
+function debounceSaveNotes(el) {
+  clearTimeout(notesSaveTimer);
+  notesSaveTimer = setTimeout(() => {
+    const idx = parseInt(el.dataset.idx);
+    const key = getItemKey(LEADS_RAW[idx]);
+    if (!reviewsByKey[key]) reviewsByKey[key] = { status: 'new', notes: '', rating: 0, reviewed_at: new Date().toISOString() };
+    reviewsByKey[key].notes = el.value;
+    reviewsByKey[key].reviewed_at = new Date().toISOString();
+    saveReviewToSupabase(key, reviewsByKey[key]);
+  }, 500);
+}
+
+// Flush pending note on page unload
+window.addEventListener('beforeunload', () => {
+  if (notesSaveTimer) {
+    clearTimeout(notesSaveTimer);
+    const ta = document.querySelector('.notes-textarea');
+    if (ta) {
+      const idx = parseInt(ta.dataset.idx);
+      const key = getItemKey(LEADS_RAW[idx]);
+      if (!reviewsByKey[key]) reviewsByKey[key] = { status: 'new', notes: '', rating: 0, reviewed_at: new Date().toISOString() };
+      reviewsByKey[key].notes = ta.value;
+      localStorage.setItem('appmax_qa_reviews_cache', JSON.stringify(reviewsAllBDRs));
+    }
+  }
+});
+
+// =================================================================
+// SIDEBAR UPDATE
+// =================================================================
+function updateSidebar() {
+  let counts = { new: 0, approved: 0, rejected: 0, maybe: 0 };
+  let pqsCounts = { all: 0, pqs1: 0, pqs2: 0, pqs3: 0 };
+
+  for (let i = 0; i < LEADS_RAW.length; i++) {
+    const lead = LEADS_RAW[i];
+    pqsCounts.all++;
+    if (lead.pqs) pqsCounts[lead.pqs] = (pqsCounts[lead.pqs] || 0) + 1;
+
+    // Status counts within current PQS filter (so sidebar reflects what user sees)
+    if (currentPqsFilter !== 'all' && lead.pqs !== currentPqsFilter) continue;
+    const key = getItemKey(lead);
+    const s = (reviewsByKey[key] || { status: 'new' }).status;
+    counts[s] = (counts[s] || 0) + 1;
+  }
+
+  const total = counts.new + counts.approved + counts.rejected + counts.maybe;
+  const reviewed = total - counts.new;
+  const pctDone = total > 0 ? Math.round((reviewed / total) * 100) : 0;
+
+  document.getElementById('filterCountAll').textContent = total;
+  document.getElementById('filterCountNew').textContent = counts.new;
+  document.getElementById('filterCountApproved').textContent = counts.approved;
+  document.getElementById('filterCountRejected').textContent = counts.rejected;
+  document.getElementById('filterCountMaybe').textContent = counts.maybe;
+
+  document.getElementById('pqsCountAll').textContent = pqsCounts.all;
+  document.getElementById('pqsCountP1').textContent = pqsCounts.pqs1 || 0;
+  document.getElementById('pqsCountP2').textContent = pqsCounts.pqs2 || 0;
+  document.getElementById('pqsCountP3').textContent = pqsCounts.pqs3 || 0;
+
+  document.getElementById('statApproved').textContent = counts.approved;
+  document.getElementById('statRejected').textContent = counts.rejected;
+  document.getElementById('statMaybe').textContent = counts.maybe;
+
+  const circumference = 2 * Math.PI * 42;
+  const offset = circumference - (pctDone / 100) * circumference;
+  document.getElementById('progressRing').style.strokeDashoffset = offset;
+  document.getElementById('progressText').textContent = pctDone + '%';
+}
+
+// =================================================================
+// TOAST
+// =================================================================
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + color + ' show';
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// =================================================================
+// EXPORT — CSV (current reviewer) / JSON (all reviewers)
+// =================================================================
+function exportCSV() {
+  if (LEADS_RAW.length === 0) return;
+  const rows = [['lead_id','cnpj','razao_social','website','pqs','status','notes','decisor_nome','decisor_email','decisor_whatsapp','reviewer','reviewed_at']];
+  for (let i = 0; i < LEADS_RAW.length; i++) {
+    const d = LEADS_RAW[i];
+    const key = getItemKey(d);
+    const r = reviewsByKey[key] || { status: 'new', notes: '', rating: 0, reviewed_at: '' };
+    const esc = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+    rows.push([
+      esc(d.lead_id),
+      esc(d.cnpj || ''),
+      esc(d.razao_social || ''),
+      esc(d.website || ''),
+      esc(d.pqs || ''),
+      r.status,
+      esc(r.notes || ''),
+      esc(d.decisor_nome || ''),
+      esc(d.decisor_email || ''),
+      esc(d.decisor_whatsapp || ''),
+      esc(currentReviewer || ''),
+      r.reviewed_at || ''
+    ]);
+  }
+  const csv = '﻿' + rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `appmax_qa_${currentReviewer || 'reviewer'}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exportado', 'blue');
+}
+
+function exportJSON() {
+  if (LEADS_RAW.length === 0) return;
+  const dump = LEADS_RAW.map(d => {
+    const key = getItemKey(d);
+    return {
+      ...d,
+      reviews: reviewsAllBDRs[key] || {},
+      bdr_agreement: computeAgreement(key)
+    };
+  });
+  const blob = new Blob([JSON.stringify(dump, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `appmax_qa_both_bdrs_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('JSON exportado (both BDRs)', 'blue');
+}
+
+function computeAgreement(key) {
+  const all = reviewsAllBDRs[key] || {};
+  const lucas = (all['Lucas'] || {}).status;
+  const eduardo = (all['Eduardo'] || {}).status;
+  if (!lucas || !eduardo) return null;
+  if (lucas === 'new' || eduardo === 'new') return null;
+  return lucas === eduardo ? 'agree' : 'disagree';
+}
+
+// =================================================================
+// KEYBOARD SHORTCUTS
+// =================================================================
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+    if (e.key === 'Escape') e.target.blur();
+    return;
+  }
+
+  // Cmd+Z / Ctrl+Z
+  if ((e.metaKey || e.ctrlKey) && (e.key === 'z' || e.key === 'Z')) {
+    e.preventDefault();
+    undo();
+    return;
+  }
+
+  // Shift alone = maybe
+  if (e.key === 'Shift' && !e.repeat) {
+    shiftPressed = true;
+    // Use Shift as tap — trigger maybe if Shift down + up without other keys (simpler: direct trigger)
+    e.preventDefault();
+    doAction('maybe');
+    return;
+  }
+
+  switch(e.key) {
+    case 'ArrowLeft':  e.preventDefault(); navigate(-1); break;
+    case 'ArrowRight': e.preventDefault(); navigate(1);  break;
+    case 'ArrowUp':
+      e.preventDefault(); doAction('approved'); break;
+    case 'ArrowDown':
+      e.preventDefault(); doAction('rejected'); break;
+  }
+});
+
+document.addEventListener('keyup', function(e) {
+  if (e.key === 'Shift') shiftPressed = false;
+});
+
+// =================================================================
+// INIT
+// =================================================================
+async function init() {
+  // 1. Check reviewer — default Eduardo se primeira visita
+  const saved = getReviewer() || 'Eduardo';
+  currentReviewer = saved;
+  localStorage.setItem('appmax_qa_reviewer', saved);
+  const rnEl = document.getElementById('reviewerName');
+  if (rnEl) rnEl.textContent = saved;
+  // Marca tab ativa
+  const tabE = document.getElementById('tabEduardo');
+  const tabL = document.getElementById('tabLucas');
+  if (tabE) tabE.classList.toggle('active', saved === 'Eduardo');
+  if (tabL) tabL.classList.toggle('active', saved === 'Lucas');
+
+  // 2. Load leads + reviews
+  try {
+    console.log('[init] loading leads from Supabase...');
+    await loadLeadsFromSupabase();
+    console.log(`[init] leads loaded: ${LEADS_RAW.length}`);
+    if (currentReviewer) {
+      console.log('[init] loading reviews...');
+      await loadReviewsFromSupabase();
+      console.log('[init] reviews loaded. reviewsAllBDRs keys:', Object.keys(reviewsAllBDRs).length);
+    }
+    dataLoaded = true;
+    console.log('[init] building filtered indices...');
+    buildFilteredIndices();
+    console.log('[init] filteredIndices:', filteredIndices.length, 'currentIndex:', currentIndex);
+    console.log('[init] rendering card...');
+    renderCard();
+    console.log('[init] updating sidebar...');
+    updateSidebar();
+    updateReviewerTabCounts();
+    console.log('[init] DONE.');
+
+    const totalLeads = LEADS_RAW.length;
+    const suffix = USE_DUMMY_DATA ? ' (LOCAL SEED)' : '';
+    showToast(`${totalLeads} leads carregados${suffix}`, 'blue');
+  } catch(e) {
+    console.error('Init error:', e);
+    document.getElementById('cardArea').innerHTML = `<div class="card-wrapper"><div class="card"><div class="empty-state">
+      <div class="empty-state-icon">&#9888;</div>
+      <h2>Erro ao carregar dados</h2>
+      <p>${escapeHtml(e.message)}</p>
+      <p style="margin-top:12px;font-size:.8rem;color:var(--text-muted)">Verifique SUPABASE_URL + SUPABASE_ANON_KEY no topo do &lt;script&gt;.</p>
+    </div></div></div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
